@@ -6,6 +6,12 @@
   <title>PeerLearn – Login</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
   <style>
     body { font-family: 'Inter', sans-serif; }
   </style>
@@ -50,11 +56,55 @@
     © <script>document.write(new Date().getFullYear());</script> PeerLearn. All rights reserved.
   </footer>
 
-  <!-- Placeholder for testing -->
+  <!-- Firebase Initialization and Login Script -->
   <script>
-    document.getElementById('loginForm').addEventListener('submit', (e) => {
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyAk0HSUY7EsXvfZaRS5oQZc6EA_VPN6ULg",
+      authDomain: "peerlearn-174bf.firebaseapp.com",
+      projectId: "peerlearn-174bf",
+      storageBucket: "peerlearn-174bf.firebasestorage.app",
+      messagingSenderId: "437373850171",
+      appId: "1:437373850171:web:b5970a87611c4e23d5821e",
+      measurementId: "G-V0MXC3CDLS"
+    };
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // Login form logic
+    const loginForm = document.getElementById("loginForm");
+
+    loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      alert('Login form submitted! (You can connect to backend later.)');
+
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      try {
+        const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        const user = userCredential.user;
+
+        // Check if email is verified
+        if (!user.emailVerified) {
+          alert("Please verify your email before logging in.");
+          await auth.signOut(); // Sign out unverified user
+          return;
+        }
+
+        alert("Logged in successfully!");
+        console.log("User info:", user);
+
+        // Optional: Redirect to dashboard or home page
+        // window.location.href = "dashboard.html";
+
+        loginForm.reset();
+      } catch (error) {
+        console.error(error);
+        alert(error.message);
+      }
     });
   </script>
 </body>
