@@ -60,14 +60,15 @@
     import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
+    // ===== Replace with your actual Firebase config =====
     const firebaseConfig = {
-      apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-      storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-      messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-      appId: import.meta.env.VITE_FIREBASE_APP_ID,
-      measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+      apiKey: "YOUR_FIREBASE_API_KEY",
+      authDomain: "your-project.firebaseapp.com",
+      projectId: "your-project-id",
+      storageBucket: "your-project.appspot.com",
+      messagingSenderId: "1234567890",
+      appId: "1:1234567890:web:abcdef123456",
+      measurementId: "G-XXXXXXXXXX"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -83,11 +84,11 @@
       const password = document.getElementById("password").value;
 
       try {
-        // 1️⃣ Attempt to login
+        // 1️⃣ Login with Firebase Auth
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // 2️⃣ Check email verification
+        // 2️⃣ Check if email is verified
         if (!user.emailVerified) {
           alert("Please verify your email before logging in.");
           await auth.signOut();
@@ -102,13 +103,14 @@
           return;
         }
 
-        // ✅ Successful login, redirect to userprofile.html
+        // 4️⃣ Successful login → redirect to userprofile.html
+        console.log("Login successful, redirecting...");
         window.location.href = "userprofile.html";
 
         loginForm.reset();
       } catch (error) {
         console.error(error);
-        alert(error.message); // Shows error if email/password is incorrect or user doesn't exist
+        alert(error.message); // Invalid email/password or other errors
       }
     });
   </script>
