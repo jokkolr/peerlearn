@@ -60,15 +60,15 @@
     import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
-    // ===== Replace with your actual Firebase config =====
+    // ===== Your Firebase config =====
     const firebaseConfig = {
-      apiKey: "YOUR_FIREBASE_API_KEY",
-      authDomain: "your-project.firebaseapp.com",
-      projectId: "your-project-id",
-      storageBucket: "your-project.appspot.com",
-      messagingSenderId: "1234567890",
-      appId: "1:1234567890:web:abcdef123456",
-      measurementId: "G-XXXXXXXXXX"
+      apiKey: "AIzaSyAk0HSUY7EsXvfZaRS5oQZc6EA_VPN6ULg",
+      authDomain: "peerlearn-174bf.firebaseapp.com",
+      projectId: "peerlearn-174bf",
+      storageBucket: "peerlearn-174bf.appspot.com",
+      messagingSenderId: "437373850171",
+      appId: "1:437373850171:web:b5970a87611c4e23d5821e",
+      measurementId: "G-V0MXC3CDLS"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -104,7 +104,6 @@
         }
 
         // 4️⃣ Successful login → redirect to userprofile.html
-        console.log("Login successful, redirecting...");
         window.location.href = "userprofile.html";
 
         loginForm.reset();
