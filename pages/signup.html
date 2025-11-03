@@ -10,7 +10,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 
   <style>
-    body { font-family: 'Inter', sans-serif; background: url('../assets/background.jpg.jpg') no-repeat center center fixed; background-size: cover; }
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background: url('../assets/background.jpg.jpg') no-repeat center center fixed; 
+      background-size: cover; 
+    }
   </style>
 </head>
 
@@ -48,7 +52,7 @@
     import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
     import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
-    // Firebase config from .env
+    // Firebase config from environment variables
     const firebaseConfig = {
       apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
       authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -59,6 +63,7 @@
       measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
     };
 
+    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
@@ -73,15 +78,15 @@
       const password = document.getElementById("password").value;
 
       try {
-        // Create user in Firebase Auth
+        // 1️⃣ Create user in Firebase Auth
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // Send email verification
+        // 2️⃣ Send email verification
         await sendEmailVerification(user);
         alert("Verification email sent! Please check your inbox.");
 
-        // Save user data in Firestore
+        // 3️⃣ Save user data in Firestore
         await setDoc(doc(db, "users", user.uid), {
           username: username,
           email: email,
@@ -89,6 +94,10 @@
         });
 
         signupForm.reset();
+
+        // 4️⃣ ✅ Redirect to userprofile.html
+        window.location.href = "userprofile.html";
+
       } catch (error) {
         console.error(error);
         alert(error.message);
