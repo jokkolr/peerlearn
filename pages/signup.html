@@ -12,7 +12,7 @@
   <style>
     body { 
       font-family: 'Inter', sans-serif; 
-      background: url('../assets/background.jpg.jpg') no-repeat center center fixed; 
+      background: url('./assets/background.jpg') no-repeat center center fixed; 
       background-size: cover; 
     }
   </style>
@@ -46,42 +46,11 @@
     </p>
   </div>
 
-  <!-- Firebase Initialization and Signup Script -->
+  <!-- ✅ Firebase Signup Logic -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-    import { 
-      getAuth, 
-      createUserWithEmailAndPassword, 
-      sendEmailVerification 
-    } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-    import { 
-      getFirestore, 
-      doc, 
-      setDoc, 
-      serverTimestamp, 
-      enableIndexedDbPersistence 
-    } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
-
-    // ✅ Direct Firebase config (works with GitHub Pages)
-    const firebaseConfig = {
-      apiKey: "AIzaSyAk0HSUY7EsXvfZaRS5oQZc6EA_VPN6ULg",
-      authDomain: "peerlearn-174bf.firebaseapp.com",
-      projectId: "peerlearn-174bf",
-      storageBucket: "peerlearn-174bf.appspot.com",
-      messagingSenderId: "437373850171",
-      appId: "1:437373850171:web:b5970a87611c4e23d5821e",
-      measurementId: "G-V0MXC3CDLS"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    // ✅ Fix for "client offline" (cache handling)
-    enableIndexedDbPersistence(db).catch((err) => {
-      console.warn("Persistence issue:", err);
-    });
+    import { auth, db } from "./firebase.js";
+    import { createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
     const signupForm = document.getElementById("signupForm");
 
@@ -93,29 +62,23 @@
       const password = document.getElementById("password").value;
 
       try {
-        // 1️⃣ Create user in Firebase Auth
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // 2️⃣ Send verification email
         await sendEmailVerification(user);
-        alert("✅ Verification email sent! Please check your inbox or spam folder.");
+        alert("✅ Verification email sent! Please check your inbox.");
 
-        // 3️⃣ Store user data in Firestore
         await setDoc(doc(db, "users", user.uid), {
-          username: username,
-          email: email,
-          createdAt: serverTimestamp()
+          username,
+          email,
+          createdAt: serverTimestamp(),
         });
 
         signupForm.reset();
-
-        // 4️⃣ Redirect after signup
         window.location.href = "userprofile.html";
-
       } catch (error) {
-        console.error("Signup error:", error);
-        alert("⚠️ " + error.message);
+        console.error(error);
+        alert(error.message);
       }
     });
   </script>
